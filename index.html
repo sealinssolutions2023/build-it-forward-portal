@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build It Forward Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f1f3d; --navy-2:#1b2f57; --gold:#c9962b; --gold-soft:#f6ecd6;
+  --bg:#f5f6f8; --card:#ffffff; --text:#1a2233; --muted:#64708a; --line:#e3e6ec;
+  --good:#1f8a5b; --good-soft:#e3f4ec; --warn:#b7791f; --warn-soft:#fdf3e1; --bad:#c0392b; --bad-soft:#fbe9e7;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1220; --card:#141c2e; --text:#e6e9f0; --muted:#98a2b8; --line:#26304a;
+    --gold-soft:#3a2f17; --good-soft:#123326; --warn-soft:#3a2c12; --bad-soft:#3a1714;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1220; --card:#141c2e; --text:#e6e9f0; --muted:#98a2b8; --line:#26304a;
+  --gold-soft:#3a2f17; --good-soft:#123326; --warn-soft:#3a2c12; --bad-soft:#3a1714;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.45}
+h1,h2,h3{font-family:"PT Sans Narrow",Inter,sans-serif;margin:0;letter-spacing:.2px}
+h1{font-size:30px} h2{font-size:22px;margin-bottom:12px} h3{font-size:18px}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:flex;min-height:100vh}
+/* sidebar */
+.side{width:240px;background:var(--navy);color:#fff;padding:20px 14px;position:sticky;top:0;height:100vh;flex-shrink:0;display:flex;flex-direction:column}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 22px}
+.brand b{font-family:"PT Sans Narrow";font-size:22px;line-height:1;display:block}
+.brand span{color:var(--gold);font-family:"PT Sans Narrow";font-size:15px;letter-spacing:2px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;color:#c9d2e6;padding:10px 12px;border-radius:10px;cursor:pointer;text-align:left;font-weight:500}
+.nav button:hover{background:var(--navy-2);color:#fff}
+.nav button.on{background:var(--gold);color:var(--navy)}
+.nav svg{width:18px;height:18px;flex-shrink:0}
+.side-foot{margin-top:auto;font-size:12px;color:#8f9bb8;padding:8px}
+.side-foot button{background:none;border:1px solid #33456e;color:#c9d2e6;border-radius:8px;padding:6px 10px;cursor:pointer;margin-top:8px}
+/* main */
+main{flex:1;min-width:0;padding:28px 32px 60px;max-width:1180px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.top p{margin:4px 0 0;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.muted{background:var(--line);color:var(--muted)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g-dash{grid-template-columns:320px minmax(0,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.card-h h3{margin:0}
+.link{background:none;border:0;color:var(--gold);font-weight:600;cursor:pointer;padding:0}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer}
+.btn.gold{background:var(--gold);color:var(--navy)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+:root[data-theme="dark"] .btn:not(.gold):not(.ghost){background:#2a3b63}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn:not(.gold):not(.ghost){background:#2a3b63}}
+.muted{color:var(--muted)} .small{font-size:13px}
+.row{display:flex;align-items:center;gap:12px}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.grow{flex:1;min-width:0}
+.icon-box{width:38px;height:38px;border-radius:10px;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;flex-shrink:0}
+.icon-box svg{width:20px;height:20px}
+/* score */
+.score{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ring{position:relative;width:180px;height:180px}
+.ring svg{transform:rotate(-90deg)}
+.ring .val{position:absolute;inset:0;display:grid;place-items:center}
+.ring .val b{font-family:"PT Sans Narrow";font-size:52px;line-height:1}
+.ring .val small{display:block;color:var(--muted);font-size:12px}
+.disclaimer{font-size:11.5px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:14px;text-align:left}
+/* systems */
+.sys{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.sys .card{padding:16px}
+.bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%}
+/* stages */
+.stages{display:flex;gap:4px;margin:14px 0 6px;flex-wrap:wrap}
+.stage{flex:1;min-width:70px;text-align:center;font-size:11.5px;color:var(--muted)}
+.stage i{display:block;height:6px;border-radius:6px;background:var(--line);margin-bottom:6px}
+.stage.done i{background:var(--gold)}
+.stage.now i{background:var(--navy)} .stage.now{color:var(--text);font-weight:700}
+:root[data-theme="dark"] .stage.now i{background:#7f9ad6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stage.now i{background:#7f9ad6}}
+.feed li{align-items:flex-start}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0}
+/* tasks */
+.check{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center;flex-shrink:0;padding:0}
+.check.on{background:var(--good);border-color:var(--good);color:#fff}
+.check svg{width:14px;height:14px}
+.done-text{text-decoration:line-through;color:var(--muted)}
+/* tabs */
+.tabs{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.tabs button{border:0;background:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button.on{background:var(--navy);color:#fff}
+/* roadmap */
+.rm-item{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.rm-item:first-child{border-top:0}
+/* forms */
+label{display:block;font-weight:600;font-size:13px;margin-bottom:6px}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+textarea{min-height:90px;resize:vertical}
+.field{margin-bottom:14px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1;min-width:90px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px;cursor:pointer;font-weight:600}
+.seg button.on{border-color:var(--gold);background:var(--gold-soft);color:var(--gold)}
+/* tiers */
+.tier{display:flex;flex-direction:column}
+.tier.feat{border:2px solid var(--gold)}
+.price{font-family:"PT Sans Narrow";font-size:40px;margin:8px 0 2px}
+.tier ul{padding-left:18px;margin:14px 0 18px;flex:1}
+.tier li{margin-bottom:6px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,15,30,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal.show{display:flex}
+.modal .card{width:100%;max-width:460px;max-height:90vh;overflow:auto}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;transition:.25s;z-index:60;font-weight:500}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.empty{color:var(--muted);text-align:center;padding:20px}
+.mob-top{display:none}
+.hidden{display:none!important}
+/* responsive */
+@media (max-width:980px){
+  .g-dash,.g3{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .app{flex-direction:column}
+  .side{position:static;width:100%;height:auto;padding:10px 16px}
+  .brand{padding:6px 0 10px}
+  .nav{display:flex;overflow-x:auto;gap:4px;padding-bottom:4px}
+  .nav button{white-space:nowrap;width:auto;padding:8px 12px}
+  .side-foot{display:none}
+  main{padding:20px 16px 60px}
+  .g2{grid-template-columns:1fr}
+  .rm-item{grid-template-columns:1fr;gap:6px}
+  h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 21 20 8l16 13" fill="none" stroke="#c9962b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 19v14h22V19" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><rect x="17" y="23" width="6" height="10" fill="#c9962b"/></svg>
+      <div><b>BUILD IT FORWARD</b><span>HOMEOWNER PORTAL</span></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      Prototype with sample data.<br>Changes are saved in this browser only.
+      <br><button id="resetBtn">Reset sample data</button>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<div class="modal" id="modal"><div class="card" id="modalBody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- icons ---------- */
+const I = {
+  home:'<path d="M3 11 12 3l9 8M5 9.5V21h14V9.5"/>',
+  passport:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  project:'<path d="M14 6l4 4-9 9H5v-4z"/><path d="M12 8l4 4"/>',
+  roadmap:'<path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  request:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  check:'<path d="M5 12l5 5 9-10"/>',
+  file:'<path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+  receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+  camera:'<path d="M4 7h4l2-3h4l2 3h4v13H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  wrench:'<path d="M14.5 5.5a4 4 0 0 0 5 5L12 18l-3 3-3-3 3-3 7.5-7.5"/>',
+};
+const ic = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = (n) => '$' + Number(n).toLocaleString();
+
+/* ---------- sample data ---------- */
+const SAMPLE = {
+  owner:'Jordan Sample',
+  home:{address:'123 Maple Avenue, Erie, PA', built:1962, sqft:1850, beds:3, baths:2, since:'2019'},
+  tier:'plus',
+  systems:[
+    {id:'roof',name:'Roof',detail:'Asphalt shingle',installed:2008,life:25,condition:'fair',last:'Inspected Apr 2026'},
+    {id:'hvac',name:'Furnace / HVAC',detail:'Gas forced air',installed:2015,life:20,condition:'good',last:'Serviced Oct 2025'},
+    {id:'wh',name:'Water Heater',detail:'50 gal gas tank',installed:2011,life:12,condition:'attention',last:'Flushed 2024'},
+    {id:'elec',name:'Electrical',detail:'200A panel',installed:2018,life:40,condition:'good',last:'Panel upgrade 2018'},
+    {id:'plumb',name:'Plumbing',detail:'Copper / PEX',installed:1995,life:50,condition:'good',last:'No issues logged'},
+    {id:'found',name:'Foundation / Basement',detail:'Block, partially finished',installed:1962,life:100,condition:'fair',last:'Minor seepage noted'},
+  ],
+  records:[
+    {id:1,type:'Warranty',title:'Furnace — 10-yr parts warranty',date:'2015-10-12',note:'Expires Oct 2025 · Lennox'},
+    {id:2,type:'Receipt',title:'Bathroom refresh — final invoice',date:'2026-06-18',note:'$9,840 · Build It Forward project'},
+    {id:3,type:'Photo set',title:'Bathroom — before/after (24 photos)',date:'2026-06-18',note:'Closeout package'},
+    {id:4,type:'Selection',title:'Bath tile & fixtures selections',date:'2026-05-02',note:'Daltile 12x24 Matte Grey · Moen Align'},
+    {id:5,type:'Receipt',title:'200A electrical panel upgrade',date:'2018-03-09',note:'$2,400 · Prior owner contractor'},
+  ],
+  project:{
+    name:'Kitchen Refresh',value:14500,stage:5,
+    trade:'Cabinets, countertops, electrical',start:'Sep 22, 2026',finish:'Oct 24, 2026 (target)',
+    updates:[
+      {date:'Oct 1',text:'Countertop template completed. Quartz fabrication scheduled for Oct 9.'},
+      {date:'Sep 29',text:'Quality gate passed: electrical rough-in verified before drywall patch.'},
+      {date:'Sep 24',text:'Change order #1 approved: add under-cabinet lighting (+$620).'},
+      {date:'Sep 22',text:'Demolition complete. 18 photos added to project record.'},
+    ],
+  },
+  stages:['Discover','Assess','Prioritize','Plan','Quote','Execute','Verify','Document','Maintain'],
+  roadmap:[
+    {id:1,year:1,title:'Replace water heater',why:'Unit is past typical 12-year life',lo:1400,hi:2200,priority:'high'},
+    {id:2,year:1,title:'Basement drainage / downspout extensions',why:'Minor seepage noted in spring',lo:400,hi:1500,priority:'high'},
+    {id:3,year:3,title:'Roof replacement planning',why:'Roof is 18 years into ~25 year life',lo:11000,hi:16000,priority:'medium'},
+    {id:4,year:3,title:'Insulate attic to R-49',why:'Reduce heating cost; Erie winters',lo:1800,hi:3000,priority:'medium'},
+    {id:5,year:5,title:'Replace original windows (front)',why:'Comfort and efficiency upgrade',lo:6000,hi:9500,priority:'low'},
+    {id:6,year:5,title:'Finish remaining basement',why:'Add living space once dry',lo:18000,hi:30000,priority:'low'},
+  ],
+  tasks:[
+    {id:1,season:'Fall',title:'Clean gutters and check downspouts',due:'2026-10-20',done:false},
+    {id:2,season:'Fall',title:'Furnace tune-up and filter change',due:'2026-10-15',done:false},
+    {id:3,season:'Fall',title:'Shut off and drain exterior hose bibs',due:'2026-11-01',done:false},
+    {id:4,season:'Fall',title:'Test smoke and CO detectors',due:'2026-09-30',done:true},
+    {id:5,season:'Winter',title:'Check attic for ice dams / frost',due:'2027-01-15',done:false},
+    {id:6,season:'Winter',title:'Flush water heater sediment',due:'2027-02-01',done:false},
+    {id:7,season:'Spring',title:'Inspect roof after winter',due:'2027-04-10',done:false},
+    {id:8,season:'Spring',title:'Test sump pump',due:'2027-04-01',done:false},
+    {id:9,season:'Summer',title:'Service A/C condenser',due:'2027-06-01',done:false},
+  ],
+  requests:[
+    {id:1,type:'Repair',title:'Dripping kitchen faucet',urgency:'Routine',status:'Scheduled',date:'Sep 18, 2026'},
+  ],
+};
+
+/* ---------- state ---------- */
+const KEY = 'bif-portal-v1';
+let S;
+function load(){ try{ const raw = localStorage.getItem(KEY); S = raw ? JSON.parse(raw) : structuredClone(SAMPLE); }catch{ S = structuredClone(SAMPLE); } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch{} }
+load();
+
+/* ---------- score ---------- */
+const COND = {good:{pts:100,label:'Good',cls:'good'},fair:{pts:70,label:'Monitor',cls:'warn'},attention:{pts:40,label:'Needs attention',cls:'bad'}};
+const TODAY = new Date('2026-10-02');
+function score(){
+  const sys = S.systems.reduce((a,s)=>a+COND[s.condition].pts,0)/S.systems.length;
+  const overdue = S.tasks.filter(t=>!t.done && new Date(t.due) < TODAY).length;
+  const doneRecent = S.tasks.filter(t=>t.done).length;
+  const records = Math.min(S.records.length, 10);
+  return Math.max(0, Math.min(100, Math.round(sys*0.8 + records*1.2 + doneRecent*1.5 - overdue*4)));
+}
+const scoreLabel = (n) => n>=85?['Excellent','good']:n>=70?['Good','good']:n>=55?['Fair','warn']:['Needs work','bad'];
+
+/* ---------- nav ---------- */
+const PAGES = [
+  ['dash','Dashboard','home'],['passport','Home Passport','passport'],['project','My Project','project'],
+  ['roadmap','Roadmap','roadmap'],['maint','Maintenance','calendar'],['request','Request Service','request'],['homecare','HomeCare','star'],
+];
+let page = 'dash';
+function nav(){
+  document.getElementById('nav').innerHTML = PAGES.map(([id,label,icon]) =>
+    `<button class="${page===id?'on':''}" data-go="${id}">${ic(icon)}${label}</button>`).join('');
+}
+function go(p){ page=p; render(); window.scrollTo(0,0); }
+
+/* ---------- pages ---------- */
+function ring(n, size=180){
+  const r = size/2 - 12, c = 2*Math.PI*r, [, cls] = scoreLabel(n);
+  const col = getComputedStyle(document.documentElement).getPropertyValue('--'+cls).trim();
+  return `<div class="ring" style="width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-n/100)}"/></svg>
+    <div class="val"><div><b>${n}</b><small>out of 100</small></div></div></div>`;
+}
+const DISC = `<div class="disclaimer"><b>About this score:</b> The Home Health Score™ is a maintenance-planning tool based on documented records and observable conditions. It is not a home inspection, engineering opinion, code certification, appraisal or guarantee of safety.</div>`;
+
+function stagesBar(cur){
+  return `<div class="stages">${S.stages.map((s,i)=>`<div class="stage ${i<cur?'done':i===cur?'now':''}"><i></i>${s}</div>`).join('')}</div>`;
+}
+
+function pDash(){
+  const n = score(), [lbl,cls] = scoreLabel(n);
+  const upcoming = S.tasks.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,4);
+  const attn = S.systems.filter(s=>s.condition!=='good');
+  const tier = TIERS.find(t=>t.id===S.tier);
+  return `
+  <div class="top"><div><h1>Welcome back, ${esc(S.owner.split(' ')[0])}</h1><p>${esc(S.home.address)}</p></div>
+    <button class="btn gold" data-go="request">+ Request service</button></div>
+  <div class="grid g-dash">
+    <div class="card score">
+      <div class="card-h" style="width:100%"><h3>Home Health Score™</h3><span class="pill ${cls}">${lbl}</span></div>
+      ${ring(n)}
+      <p class="small muted" style="margin:12px 0 0">Complete maintenance tasks and keep records up to date to raise your score.</p>
+      ${DISC}
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-h"><h3>Active project · ${esc(S.project.name)}</h3><button class="link" data-go="project">View details →</button></div>
+        <div class="row small muted" style="flex-wrap:wrap;gap:16px"><span>Target finish: <b style="color:var(--text)">${esc(S.project.finish)}</b></span><span>Contract: <b style="color:var(--text)">${money(S.project.value)}</b></span></div>
+        ${stagesBar(S.project.stage)}
+        <p class="small" style="margin:10px 0 0"><b>Latest:</b> ${esc(S.project.updates[0].text)}</p>
+      </div>
+      <div class="grid g2">
+        <div class="card">
+          <div class="card-h"><h3>Coming up</h3><button class="link" data-go="maint">All tasks →</button></div>
+          ${upcoming.length?`<ul class="list">${upcoming.map(taskRow).join('')}</ul>`:'<div class="empty">All caught up!</div>'}
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Needs a look</h3><button class="link" data-go="passport">Passport →</button></div>
+          <ul class="list">${attn.map(s=>`<li><div class="icon-box">${ic('wrench')}</div><div class="grow"><b>${esc(s.name)}</b><div class="small muted">${esc(s.last)}</div></div><span class="pill ${COND[s.condition].cls}">${COND[s.condition].label}</span></li>`).join('')}</ul>
+        </div>
+      </div>
+      <div class="card row" style="justify-content:space-between;flex-wrap:wrap">
+        <div class="row"><div class="icon-box">${ic('star')}</div><div><b>HomeCare ${esc(tier.name)}</b> member<div class="small muted">Priority scheduling · annual roadmap refresh${S.tier!=='essential'?' · condition review':''}</div></div></div>
+        <button class="btn ghost" data-go="homecare">Manage membership</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function taskRow(t){
+  const overdue = !t.done && new Date(t.due) < TODAY;
+  const d = new Date(t.due+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  return `<li><button class="check ${t.done?'on':''}" data-task="${t.id}" aria-label="Mark ${esc(t.title)} done">${t.done?ic('check'):''}</button>
+    <div class="grow"><div class="${t.done?'done-text':''}">${esc(t.title)}</div><div class="small muted">${t.season} · ${d}</div></div>
+    ${overdue?'<span class="pill bad">Overdue</span>':''}</li>`;
+}
+
+function pPassport(){
+  const h = S.home;
+  const typeIcon = {Warranty:'shield',Receipt:'receipt','Photo set':'camera',Selection:'file',Document:'file','Maintenance':'wrench'};
+  return `
+  <div class="top"><div><h1>Digital Home Passport™</h1><p>One permanent record for everything about your home.</p></div>
+    <button class="btn gold" id="addRec">+ Add record</button></div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="grid g3" style="gap:10px">
+      <div><div class="small muted">Address</div><b>${esc(h.address)}</b></div>
+      <div><div class="small muted">Built · Size</div><b>${h.built} · ${h.sqft.toLocaleString()} sq ft · ${h.beds} bd / ${h.baths} ba</b></div>
+      <div><div class="small muted">Owned since</div><b>${esc(h.since)}</b></div>
+    </div>
+  </div>
+  <h2>Major systems</h2>
+  <div class="sys" style="margin-bottom:24px">${S.systems.map(s=>{
+    const age = TODAY.getFullYear()-s.installed, pct = Math.min(100, Math.round(age/s.life*100));
+    const col = pct>=90?'var(--bad)':pct>=65?'var(--warn)':'var(--good)';
+    return `<div class="card"><div class="card-h" style="margin-bottom:4px"><h3>${esc(s.name)}</h3>
+      <select data-cond="${s.id}" style="width:auto;padding:4px 8px;font-size:12px" aria-label="Condition">
+        ${Object.entries(COND).map(([k,v])=>`<option value="${k}" ${s.condition===k?'selected':''}>${v.label}</option>`).join('')}</select></div>
+      <div class="small muted">${esc(s.detail)}</div>
+      <div class="small" style="margin-top:8px">Installed ${s.installed} · ${age} of ~${s.life} yrs</div>
+      <div class="bar"><i style="width:${pct}%;background:${col}"></i></div>
+      <div class="small muted" style="margin-top:8px">${esc(s.last)}</div></div>`;}).join('')}
+  </div>
+  <h2>Records</h2>
+  <div class="card"><ul class="list">${[...S.records].sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`
+    <li><div class="icon-box">${ic(typeIcon[r.type]||'file')}</div>
+    <div class="grow"><b>${esc(r.title)}</b><div class="small muted">${esc(r.note)}</div></div>
+    <div style="text-align:right"><span class="pill muted">${esc(r.type)}</span><div class="small muted" style="margin-top:4px">${new Date(r.date+'T12:00').toLocaleDateString('en-US',{month:'short',year:'numeric'})}</div></div></li>`).join('')}
+  </ul></div>`;
+}
+
+function pProject(){
+  const p = S.project;
+  return `
+  <div class="top"><div><h1>${esc(p.name)}</h1><p>${esc(p.trade)}</p></div><span class="pill gold">In progress · ${S.stages[p.stage]}</span></div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="grid g3" style="gap:10px">
+      <div><div class="small muted">Started</div><b>${esc(p.start)}</b></div>
+      <div><div class="small muted">Target finish</div><b>${esc(p.finish)}</b></div>
+      <div><div class="small muted">Contract value</div><b>${money(p.value)}</b></div>
+    </div>
+    ${stagesBar(p.stage)}
+  </div>
+  <div class="grid g2">
+    <div class="card"><div class="card-h"><h3>Project updates</h3></div>
+      <ul class="list feed">${p.updates.map(u=>`<li><span class="dot"></span><div class="grow"><div>${esc(u.text)}</div><div class="small muted">${esc(u.date)}</div></div></li>`).join('')}</ul></div>
+    <div class="grid" style="align-content:start">
+      <div class="card"><h3 style="margin-bottom:10px">What happens next</h3>
+        <ul class="list small">
+          <li>${ic('check').replace('<svg','<svg width="16" height="16" style="color:var(--gold)"')}Countertop install · Oct 9–10</li>
+          <li>${ic('check').replace('<svg','<svg width="16" height="16" style="color:var(--gold)"')}Backsplash tile and lighting · Oct 13–17</li>
+          <li>${ic('check').replace('<svg','<svg width="16" height="16" style="color:var(--gold)"')}Final quality walkthrough with you · Oct 22</li>
+          <li>${ic('check').replace('<svg','<svg width="16" height="16" style="color:var(--gold)"')}Closeout package added to your Passport</li>
+        </ul></div>
+      <div class="card"><h3 style="margin-bottom:10px">Questions about this project?</h3>
+        <p class="small muted" style="margin-top:0">Your project coordinator replies within one business day.</p>
+        <button class="btn" id="msgBtn">Send a message</button></div>
+    </div>
+  </div>`;
+}
+
+let rmYear = 'all';
+function pRoadmap(){
+  const items = S.roadmap.filter(r=>rmYear==='all'||r.year<=+rmYear);
+  const lo = items.reduce((a,r)=>a+r.lo,0), hi = items.reduce((a,r)=>a+r.hi,0);
+  const pcls = {high:'bad',medium:'warn',low:'muted'};
+  return `
+  <div class="top"><div><h1>Home Investment Roadmap™</h1><p>Your prioritized plan for the next 1, 3 and 5 years, with planning-range budgets.</p></div>
+    <div class="tabs">${[['all','All'],['1','1 year'],['3','3 years'],['5','5 years']].map(([k,l])=>`<button class="${rmYear===k?'on':''}" data-rm="${k}">${l}</button>`).join('')}</div></div>
+  <div class="grid g3" style="margin-bottom:18px">
+    <div class="card"><div class="small muted">Projects in view</div><h1>${items.length}</h1></div>
+    <div class="card"><div class="small muted">Planning budget range</div><h1>${money(lo)} – ${money(hi)}</h1></div>
+    <div class="card"><div class="small muted">High priority</div><h1>${items.filter(r=>r.priority==='high').length}</h1></div>
+  </div>
+  <div class="card">${items.map(r=>`
+    <div class="rm-item"><div><span class="pill gold">Year ${r.year===1?'1':r.year===3?'2–3':'4–5'}</span></div>
+    <div><b>${esc(r.title)}</b><div class="small muted">${esc(r.why)}</div></div>
+    <div style="text-align:right"><b>${money(r.lo)} – ${money(r.hi)}</b><div style="margin-top:4px"><span class="pill ${pcls[r.priority]}">${r.priority[0].toUpperCase()+r.priority.slice(1)} priority</span></div>
+    <button class="link small" style="margin-top:6px" data-quote="${r.id}">Request a quote →</button></div></div>`).join('')}
+  </div>
+  <p class="small muted">Budgets are planning ranges, not quotes. Your roadmap is refreshed at least once a year as part of HomeCare.</p>`;
+}
+
+function pMaint(){
+  const seasons = ['Fall','Winter','Spring','Summer'];
+  const done = S.tasks.filter(t=>t.done).length;
+  return `
+  <div class="top"><div><h1>Maintenance Calendar</h1><p>Seasonal tasks tailored to your home and Erie's climate. Checking tasks off raises your Home Health Score™.</p></div>
+    <span class="pill good">${done} of ${S.tasks.length} done</span></div>
+  <div class="grid g2">${seasons.map(s=>{
+    const ts = S.tasks.filter(t=>t.season===s);
+    return `<div class="card"><h3 style="margin-bottom:6px">${s}</h3><ul class="list">${ts.map(taskRow).join('')}</ul></div>`;}).join('')}
+  </div>`;
+}
+
+let req = {type:'Repair',urgency:'Routine'};
+function pRequest(){
+  const types = ['Repair','Remodel','Maintenance','Emergency','Second opinion'];
+  const urg = ['Routine','Soon','Urgent'];
+  return `
+  <div class="top"><div><h1>Request Service</h1><p>Tell us what's going on. We'll decide the right path: contracting, maintenance, advisory or emergency coordination.</p></div></div>
+  <div class="grid g2">
+    <form class="card" id="reqForm">
+      <div class="field"><label>What do you need?</label><div class="seg">${types.map(t=>`<button type="button" class="${req.type===t?'on':''}" data-rtype="${t}">${t}</button>`).join('')}</div></div>
+      ${req.type==='Emergency'?`<div class="disclaimer" style="margin:-4px 0 14px;background:var(--bad-soft);color:var(--bad)"><b>If anyone is in danger, or you smell gas, call 911 or your utility first.</b> We'll route your request to an appropriate qualified provider as quickly as possible.</div>`:''}
+      <div class="field"><label for="rTitle">Short description</label><input id="rTitle" required placeholder="e.g. Water stain on living room ceiling"></div>
+      <div class="field"><label for="rDetail">Details</label><textarea id="rDetail" placeholder="Where is it, when did it start, anything you've tried…"></textarea></div>
+      <div class="field"><label>How urgent?</label><div class="seg">${urg.map(u=>`<button type="button" class="${req.urgency===u?'on':''}" data-rurg="${u}">${u}</button>`).join('')}</div></div>
+      <div class="grid g2" style="gap:12px">
+        <div class="field"><label for="rWhen">Preferred timing</label><select id="rWhen"><option>As soon as possible</option><option>Within 2 weeks</option><option>Within a month</option><option>Flexible</option></select></div>
+        <div class="field"><label for="rPhotos">Photos (optional)</label><input id="rPhotos" type="file" accept="image/*" multiple></div>
+      </div>
+      <button class="btn gold" type="submit" style="width:100%">Submit request</button>
+    </form>
+    <div class="card" style="align-self:start"><h3 style="margin-bottom:6px">Your requests</h3>
+      ${S.requests.length?`<ul class="list">${[...S.requests].reverse().map(r=>`<li><div class="icon-box">${ic('request')}</div><div class="grow"><b>${esc(r.title)}</b><div class="small muted">${esc(r.type)} · ${esc(r.urgency)} · ${esc(r.date)}${r.photos?` · ${r.photos} photo${r.photos>1?'s':''}`:''}</div></div><span class="pill ${r.status==='Scheduled'?'good':'gold'}">${esc(r.status)}</span></li>`).join('')}</ul>`:'<div class="empty">No requests yet</div>'}
+    </div>
+  </div>`;
+}
+
+const TIERS = [
+  {id:'essential',name:'Essential',m:19,y:199,feat:['Digital Home Passport™','Seasonal maintenance calendar','Annual roadmap refresh','Member scheduling priority']},
+  {id:'plus',name:'Plus',m:39,y:399,feat:['Everything in Essential','Annual property condition review*','Home Health Score™','Preferred coordination benefits']},
+  {id:'premier',name:'Premier',m:69,y:699,feat:['Everything in Plus','Two seasonal maintenance / concierge visits','Enhanced project planning','Priority emergency coordination']},
+];
+let billing = 'm';
+function pHomecare(){
+  return `
+  <div class="top"><div><h1>Build It Forward HomeCare™</h1><p>An ongoing relationship that keeps your home on track between projects.</p></div>
+    <div class="tabs"><button class="${billing==='m'?'on':''}" data-bill="m">Monthly</button><button class="${billing==='y'?'on':''}" data-bill="y">Yearly · save ~13%</button></div></div>
+  <div class="grid g3">${TIERS.map(t=>`
+    <div class="card tier ${t.id==='plus'?'feat':''}">
+      <div class="card-h" style="margin-bottom:0"><h3>HomeCare ${t.name}</h3>${S.tier===t.id?'<span class="pill good">Current plan</span>':t.id==='plus'?'<span class="pill gold">Most popular</span>':''}</div>
+      <div class="price">$${billing==='m'?t.m:t.y}<span class="small muted" style="font-family:Inter">/${billing==='m'?'month':'year'}</span></div>
+      <ul>${t.feat.map(f=>`<li>${f}</li>`).join('')}</ul>
+      ${S.tier===t.id?'<button class="btn ghost" disabled>Your plan</button>':`<button class="btn ${t.id==='plus'?'gold':''}" data-tier="${t.id}">Switch to ${t.name}</button>`}
+    </div>`).join('')}
+  </div>
+  <p class="small muted">*Condition review is a visual maintenance-planning review within a defined, non-inspection scope. When a condition requires a licensed professional, we refer or coordinate a qualified provider. Pricing shown is illustrative for this prototype.</p>`;
+}
+
+/* ---------- render ---------- */
+const VIEWS = {dash:pDash,passport:pPassport,project:pProject,roadmap:pRoadmap,maint:pMaint,request:pRequest,homecare:pHomecare};
+function render(){ nav(); document.getElementById('main').innerHTML = VIEWS[page](); }
+
+/* ---------- interactions ---------- */
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2400); }
+function modal(html){ const m=document.getElementById('modal'); document.getElementById('modalBody').innerHTML=html; m.classList.add('show'); }
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+const todayStr = () => TODAY.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('button,[data-go]'); if(!el) return;
+  const d = el.dataset;
+  if(d.go) return go(d.go);
+  if(d.task){ const t=S.tasks.find(x=>x.id==d.task); const before=score(); t.done=!t.done; save(); render(); const diff=score()-before; if(t.done) toast(`Nice work! Home Health Score ${diff>=0?'+':''}${diff}`); return; }
+  if(d.rm){ rmYear=d.rm; return render(); }
+  if(d.bill){ billing=d.bill; return render(); }
+  if(d.tier){ const t=TIERS.find(x=>x.id===d.tier); modal(`<h2>Switch to HomeCare ${t.name}?</h2><p class="muted">In the live app this would update your membership and billing. In this prototype it just changes your plan.</p><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-close>Cancel</button><button class="btn gold" data-confirmtier="${t.id}">Switch plan</button></div>`); return; }
+  if(d.confirmtier){ S.tier=d.confirmtier; save(); closeModal(); render(); toast('Membership updated'); return; }
+  if(d.close!==undefined){ return closeModal(); }
+  if(d.rtype){ req.type=d.rtype; return keepForm(render); }
+  if(d.rurg){ req.urgency=d.rurg; return keepForm(render); }
+  if(d.quote){ const r=S.roadmap.find(x=>x.id==d.quote); S.requests.push({id:Date.now(),type:'Quote',title:r.title,urgency:'Routine',status:'Received',date:todayStr()}); save(); toast('Quote requested. See it under Request Service.'); return; }
+  if(el.id==='addRec') return modal(`<h2>Add a record</h2>
+    <form id="recForm"><div class="field"><label for="recType">Type</label><select id="recType"><option>Receipt</option><option>Warranty</option><option>Photo set</option><option>Selection</option><option>Maintenance</option><option>Document</option></select></div>
+    <div class="field"><label for="recTitle">Title</label><input id="recTitle" required placeholder="e.g. Sump pump replacement"></div>
+    <div class="field"><label for="recDate">Date</label><input id="recDate" type="date" value="2026-10-02"></div>
+    <div class="field"><label for="recNote">Notes</label><input id="recNote" placeholder="Cost, brand, contractor, expiration…"></div>
+    <div class="row" style="justify-content:flex-end"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn gold">Save record</button></div></form>`);
+  if(el.id==='msgBtn') return modal(`<h2>Message your coordinator</h2><form id="msgForm"><div class="field"><textarea id="msgText" required placeholder="Type your question…"></textarea></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn gold">Send</button></div></form>`);
+  if(el.id==='resetBtn'){ S=structuredClone(SAMPLE); save(); render(); toast('Sample data restored'); }
+});
+document.getElementById('modal').addEventListener('click', e => { if(e.target.id==='modal') closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+function keepForm(fn){
+  const vals = {}; ['rTitle','rDetail','rWhen'].forEach(id=>{ const x=document.getElementById(id); if(x) vals[id]=x.value; });
+  fn(); Object.entries(vals).forEach(([id,v])=>{ const x=document.getElementById(id); if(x) x.value=v; });
+}
+
+document.addEventListener('change', e => {
+  if(e.target.dataset.cond){ const s=S.systems.find(x=>x.id===e.target.dataset.cond); s.condition=e.target.value; save(); render(); toast('Condition updated'); }
+});
+
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  if(e.target.id==='reqForm'){
+    const photos = document.getElementById('rPhotos').files.length;
+    S.requests.push({id:Date.now(),type:req.type,title:document.getElementById('rTitle').value.trim(),urgency:req.urgency,status:'Received',date:todayStr(),photos});
+    save(); req={type:'Repair',urgency:'Routine'}; render(); toast('Request received. We\'ll be in touch within one business day.');
+  }
+  if(e.target.id==='recForm'){
+    S.records.push({id:Date.now(),type:document.getElementById('recType').value,title:document.getElementById('recTitle').value.trim(),date:document.getElementById('recDate').value||'2026-10-02',note:document.getElementById('recNote').value.trim()});
+    save(); closeModal(); render(); toast('Record added to your Passport');
+  }
+  if(e.target.id==='msgForm'){ closeModal(); toast('Message sent to your project coordinator'); }
+});
+
+render();
+</script>
+</body>
+</html>
